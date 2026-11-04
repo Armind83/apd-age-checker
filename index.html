@@ -84,6 +84,7 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
+      text-decoration: none;
     }
     .btn-primary {
       background-color: #e65100;
@@ -91,47 +92,6 @@
     }
     .btn-primary:active {
       background-color: #bf360c;
-    }
-    /* Fullscreen Drawer for Security Manager */
-    .portal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background-color: #0d0d0d;
-      z-index: 999;
-      display: none;
-      flex-direction: column;
-    }
-    .portal-header {
-      background-color: #1a1a1a;
-      border-bottom: 1px solid #2a2a2a;
-      padding: 12px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .portal-title {
-      font-size: 0.95rem;
-      font-weight: 800;
-      color: #ff9800;
-      text-transform: uppercase;
-    }
-    .close-btn {
-      background-color: #e65100;
-      color: #fff;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-weight: 800;
-      font-size: 0.85rem;
-      cursor: pointer;
-    }
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
     }
   </style>
 </head>
@@ -153,16 +113,7 @@
   </div>
 
   <div class="btn-group">
-    <button class="btn btn-primary" onclick="openPortal()">📋 Observations</button>
-  </div>
-
-  <!-- Security Manager Fullscreen Overlay -->
-  <div class="portal-overlay" id="portal-overlay">
-    <div class="portal-header">
-      <span class="portal-title">Observations Portal</span>
-      <button class="close-btn" onclick="closePortal()">← Back to App</button>
-    </div>
-    <iframe id="portal-frame" src="about:blank"></iframe>
+    <a href="https://app.securitymanager.cloud/observations.php" target="_blank" class="btn btn-primary">📋 Observations</a>
   </div>
 
   <script>
@@ -171,21 +122,6 @@
       const options = { day: 'numeric', month: 'short', year: 'numeric' };
       const cutoff = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
       document.getElementById('cutoff-date').innerText = cutoff.toLocaleDateString('en-GB', options);
-    }
-
-    function openPortal() {
-      const overlay = document.getElementById('portal-overlay');
-      const frame = document.getElementById('portal-frame');
-      
-      if (frame.src === "about:blank") {
-        frame.src = "https://app.securitymanager.cloud/observations.php";
-      }
-      
-      overlay.style.display = 'flex';
-    }
-
-    function closePortal() {
-      document.getElementById('portal-overlay').style.display = 'none';
     }
 
     init();
