@@ -206,42 +206,4 @@
   <div class="card">
     <div class="label">Must be born on or before:</div>
     <div class="cutoff-date" id="cutoff-date">-- --- ----</div>
-    <div class="cutoff-sub">To be 18 years of age today</div>
-  </div>
-
-  <div class="btn-group">
-    <button class="btn btn-primary" onclick="toggleDrawer('passport-box', 'passport-year')">🛂 Check Passport</button>
-    <button class="btn btn-secondary" onclick="toggleDrawer('licence-box', 'licence-year')">🆔 Check Driving Licence</button>
-    <a href="https://app.securitymanager.cloud/observations.php" target="_blank" class="btn btn-secondary">📋 Observations</a>
-    <a href="https://app.securitymanager.cloud/add-incident.php" target="_blank" class="btn btn-secondary">⚠️ Add Incident</a>
-  </div>
-
-  <!-- Passport Quick Check Drawer -->
-  <div class="id-drawer" id="passport-box">
-    <div class="id-guide">
-      🛂 <strong>UK Passport DOB Locations:</strong><br>
-      • Main Photo Page: <strong>Date of Birth field</strong><br>
-      • <span class="guide-field">Bottom MRZ Line 2: YYMMDD format 🎯</span>
-    </div>
-    <div class="label" style="margin:0;">Enter Birth Year:</div>
-    <input type="number" id="passport-year" class="id-input" placeholder="e.g. 2008" oninput="checkYear(this.value)">
-  </div>
-
-  <!-- Driving Licence Quick Check Drawer -->
-  <div class="id-drawer" id="licence-box">
-    <div class="id-guide">
-      🪪 <strong>UK Driving Licence Layout:</strong><br>
-      1. Surname<br>
-      2. First names<br>
-      <span class="guide-field">3. Date of Birth (DD.MM.YYYY) 🎯</span>
-    </div>
-    <div class="label" style="margin:0;">Enter Birth Year (Field 3):</div>
-    <input type="number" id="licence-year" class="id-input" placeholder="e.g. 2008" oninput="checkYear(this.value)">
-  </div>
-
-  <div id="result-box" class="result-box"></div>
-
-  <script>
-    let cutoffYear = 2008;
-
-    
+    <div class="cutoff-sub">To be 18 years of age today
