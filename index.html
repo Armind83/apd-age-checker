@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>A.P.D Security - Companion App</title>
   <meta name="theme-color" content="#0d0d0d">
+  <!-- Local MRZ Script -->
   <script src="mrz.js"></script>
   <style>
     * {
@@ -24,10 +25,23 @@
       padding: 80px 16px 20px 16px;
       position: relative;
     }
+    /* Top Left Logo Image (Chucky) */
     .top-left-logo {
       position: absolute;
       top: 12px;
       left: 12px;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #e65100;
+      box-shadow: 0 4px 16px rgba(230, 81, 0, 0.5);
+    }
+    /* Top Right Logo Image (Scooby) */
+    .top-right-logo {
+      position: absolute;
+      top: 12px;
+      right: 12px;
       width: 80px;
       height: 80px;
       border-radius: 50%;
@@ -126,7 +140,6 @@
       flex-direction: column;
       gap: 12px;
     }
-    /* Visual Licence Guide Diagram */
     .licence-guide {
       background-color: #0d0d0d;
       border: 1px dashed #e65100;
@@ -176,8 +189,11 @@
 </head>
 <body>
 
-  <!-- Top Left Logo Image -->
-  <img src="1793758190930.jpg" alt="Security Logo" class="top-left-logo" onError="this.style.display='none'">
+  <!-- Top Left Logo Image (Chucky) -->
+  <img src="1793758190930.jpg" alt="Security Logo Left" class="top-left-logo" onError="this.style.display='none'">
+
+  <!-- Top Right Logo Image (Scooby) -->
+  <img src="scooby.jpg" alt="Security Logo Right" class="top-right-logo" onError="this.style.display='none'">
 
   <div class="logo-container">
     <svg viewBox="0 0 200 200" width="90" height="90" xmlns="http://www.w3.org/2000/svg">
@@ -202,7 +218,6 @@
   </div>
 
   <div class="licence-box" id="licence-box">
-    <!-- Visual Guide for UK Driving Licence -->
     <div class="licence-guide">
       🪪 <strong>UK Driving Licence Layout:</strong><br>
       1. Surname<br>
