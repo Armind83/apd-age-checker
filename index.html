@@ -23,7 +23,7 @@
       padding: 80px 16px 20px 16px;
       position: relative;
     }
-    /* Top Left Logo Image (Chucky) */
+    /* Top Left Avatar (Chucky) */
     .top-left-logo {
       position: absolute;
       top: 12px;
@@ -35,7 +35,7 @@
       border: 3px solid #e65100;
       box-shadow: 0 4px 16px rgba(230, 81, 0, 0.5);
     }
-    /* Top Right Logo Image (Scooby) */
+    /* Top Right Avatar (Scooby) */
     .top-right-logo {
       position: absolute;
       top: 12px;
@@ -188,11 +188,11 @@
 </head>
 <body>
 
-  <!-- Top Left Logo Image (Chucky) -->
-  <img src="1793758190930.jpg" alt="Security Logo Left" class="top-left-logo" onError="this.style.display='none'">
+  <!-- Top Left Avatar (Chucky) -->
+  <img src="1793758190930.jpg" alt="Left Badge" class="top-left-logo" onError="this.style.display='none'">
 
-  <!-- Top Right Logo Image (Scooby) -->
-  <img src="1793760298423~2.jpg" alt="Security Logo Right" class="top-right-logo" onError="this.style.display='none'">
+  <!-- Top Right Avatar (Scooby) -->
+  <img src="1793760298423~2.jpg" alt="Right Badge" class="top-right-logo" onError="this.style.display='none'">
 
   <div class="logo-container">
     <svg viewBox="0 0 200 200" width="90" height="90" xmlns="http://www.w3.org/2000/svg">
@@ -204,6 +204,113 @@
   </div>
 
   <div class="card">
-    <div class="label">Must be born on or before:</div>
+    <div class="label">MUST BE BORN ON OR BEFORE:</div>
     <div class="cutoff-date" id="cutoff-date">-- --- ----</div>
-    <div class="cutoff-sub">To be 18 years of age today
+    <div class="cutoff-sub">TO BE 18 YEARS OF AGE TODAY</div>
+  </div>
+
+  <div class="btn-group">
+    <button class="btn btn-primary" onclick="toggleDrawer('passport-box', 'passport-year')">🛂 CHECK PASSPORT</button>
+    <button class="btn btn-secondary" onclick="toggleDrawer('licence-box', 'licence-year')">🆔 CHECK DRIVING LICENCE</button>
+    <a href="https://app.securitymanager.cloud/observations.php" target="_blank" class="btn btn-secondary">📋 OBSERVATIONS</a>
+    <a href="https://app.securitymanager.cloud/add-incident.php" target="_blank" class="btn btn-secondary">⚠️ ADD INCIDENT</a>
+  </div>
+
+  <!-- Passport Quick Check Drawer -->
+  <div class="id-drawer" id="passport-box">
+    <div class="id-guide">
+      🛂 <strong>UK Passport DOB Locations:</strong><br>
+      • Main Photo Page: <strong>Date of Birth field</strong><br>
+      • <span class="guide-field">Bottom MRZ Line 2: YYMMDD format 🎯</span>
+    </div>
+    <div class="label" style="margin:0;">Enter Birth Year:</div>
+    <input type="number" id="passport-year" class="id-input" placeholder="e.g. 2008" oninput="checkYear(this.value)">
+  </div>
+
+  <!-- Driving Licence Quick Check Drawer -->
+  <div class="id-drawer" id="licence-box">
+    <div class="id-guide">
+      🪪 <strong>UK Driving Licence Layout:</strong><br>
+      1. Surname<br>
+      2. First names<br>
+      <span class="guide-field">3. Date of Birth (DD.MM.YYYY) 🎯</span>
+    </div>
+    <div class="label" style="margin:0;">Enter Birth Year (Field 3):</div>
+    <input type="number" id="licence-year" class="id-input" placeholder="e.g. 2008" oninput="checkYear(this.value)">
+  </div>
+
+  <div id="result-box" class="result-box"></div>
+
+  <script>
+    // Flush service workers to force fresh load
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for (var i = 0; i < registrations.length; i++) {
+          registrations[i].unregister();
+        }
+      });
+    }
+
+    var cutoffYear = 2008;
+
+    function runInit() {
+      var today = new Date();
+      var cutoff = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+      var options = { day: 'numeric', month: 'short', year: 'numeric' };
+      cutoffYear = cutoff.getFullYear();
+      
+      var el = document.getElementById('cutoff-date');
+      if (el) {
+        el.innerText = cutoff.toLocaleDateString('en-GB', options);
+      }
+    }
+
+    function toggleDrawer(drawerId, inputId) {
+      var pBox = document.getElementById('passport-box');
+      var lBox = document.getElementById('licence-box');
+      var targetBox = document.getElementById(drawerId);
+      var resultBox = document.getElementById('result-box');
+
+      if (resultBox) resultBox.style.display = 'none';
+
+      var isAlreadyOpen = targetBox && (targetBox.style.display === 'flex');
+
+      if (pBox) pBox.style.display = 'none';
+      if (lBox) lBox.style.display = 'none';
+
+      if (!isAlreadyOpen && targetBox) {
+        targetBox.style.display = 'flex';
+        var input = document.getElementById(inputId);
+        if (input) {
+          input.value = '';
+          input.focus();
+        }
+      }
+    }
+
+    function checkYear(val) {
+      var resultBox = document.getElementById('result-box');
+      if (!resultBox) return;
+
+      if (val.length === 4) {
+        var year = parseInt(val, 10);
+        resultBox.style.display = 'block';
+
+        if (year <= cutoffYear) {
+          resultBox.className = 'result-box entry-allowed';
+          resultBox.innerText = 'BORN: ' + year + '\n\n✅ ENTRY ALLOWED (18+)';
+        } else {
+          resultBox.className = 'result-box entry-denied';
+          resultBox.innerText = 'BORN: ' + year + '\n\n🛑 UNDER 18 (REFUSE ENTRY)';
+        }
+      } else {
+        resultBox.style.display = 'none';
+      }
+    }
+
+    // Execute immediately and on DOM Ready
+    runInit();
+    document.addEventListener('DOMContentLoaded', runInit);
+  </script>
+</body>
+</html>
