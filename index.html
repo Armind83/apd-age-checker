@@ -21,6 +21,19 @@
       justify-content: center;
       min-height: 100vh;
       padding: 20px 16px;
+      position: relative;
+    }
+    /* Top Left Logo Image */
+    .top-left-logo {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #e65100;
+      box-shadow: 0 2px 10px rgba(230, 81, 0, 0.4);
     }
     .logo-container {
       width: 100px;
@@ -93,9 +106,20 @@
     .btn-primary:active {
       background-color: #bf360c;
     }
+    .btn-secondary {
+      background-color: #212121;
+      border: 1px solid #333333;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    }
+    .btn-secondary:active {
+      background-color: #333333;
+    }
   </style>
 </head>
 <body>
+
+  <!-- Points directly to your uploaded filename -->
+  <img src="1793758190930.jpg" alt="Security Logo" class="top-left-logo">
 
   <div class="logo-container">
     <svg viewBox="0 0 200 200" width="100" height="100" xmlns="http://www.w3.org/2000/svg">
@@ -114,6 +138,7 @@
 
   <div class="btn-group">
     <a href="https://app.securitymanager.cloud/observations.php" target="_blank" class="btn btn-primary">📋 Observations</a>
+    <a href="https://app.securitymanager.cloud/add-incident.php" target="_blank" class="btn btn-secondary">⚠️ Add Incident</a>
   </div>
 
   <script>
