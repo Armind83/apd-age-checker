@@ -29,8 +29,8 @@
       max-width: 400px;
     }
     .logo-container {
-      width: 110px;
-      height: 110px;
+      width: 100px;
+      height: 100px;
       margin: 0 auto 8px auto;
       display: flex;
       align-items: center;
@@ -76,7 +76,7 @@
     .label {
       font-size: 0.85rem;
       color: #b0b0b0;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
@@ -92,21 +92,56 @@
       color: #ff9800;
       font-weight: 600;
     }
-    .dob-input {
-      width: 100%;
+    .input-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .num-input {
       background-color: #0d0d0d;
       border: 2px solid #e65100;
       color: #ffffff;
       font-size: 1.2rem;
       font-weight: 700;
-      padding: 12px;
+      padding: 12px 6px;
       border-radius: 10px;
       text-align: center;
-      margin-top: 8px;
       outline: none;
     }
+    .day-box, .month-box {
+      flex: 1;
+    }
+    .year-box {
+      flex: 1.5;
+    }
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .calc-btn {
+      flex: 1;
+      background-color: #e65100;
+      color: #ffffff;
+      border: none;
+      padding: 12px;
+      font-weight: 800;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .clear-btn {
+      background-color: #333333;
+      color: #aaaaaa;
+      border: none;
+      padding: 12px 16px;
+      font-weight: 700;
+      border-radius: 10px;
+      font-size: 0.9rem;
+    }
     .result-box {
-      margin-top: 16px;
+      margin-top: 14px;
       padding: 14px;
       border-radius: 10px;
       font-size: 1.1rem;
@@ -136,7 +171,7 @@
 
   <div class="header">
     <div class="logo-container">
-      <svg viewBox="0 0 200 200" width="100" height="100" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="0 0 200 200" width="90" height="90" xmlns="http://www.w3.org/2000/svg">
         <path d="M100 20 L160 50 V100 C160 140 100 175 100 175 C100 175 40 140 40 100 V50 Z" fill="none" stroke="#e65100" stroke-width="8"/>
         <path d="M100 35 L145 58 V100 C145 130 100 158 100 158 C100 158 55 130 55 100 V58 Z" fill="none" stroke="#777777" stroke-width="4"/>
         <text x="100" y="95" font-family="sans-serif" font-weight="900" font-size="22" fill="#ffffff" text-anchor="middle">A.P.D</text>
@@ -155,13 +190,21 @@
   </div>
 
   <div class="card">
-    <div class="label">Check Specific Passport / ID DOB:</div>
-    <input type="date" id="dob-input" class="dob-input" onchange="checkAge()">
+    <div class="label">Quick Check Passport DOB:</div>
+    <div class="input-row">
+      <input type="number" id="day" class="num-input day-box" placeholder="DD" min="1" max="31" inputmode="numeric">
+      <input type="number" id="month" class="num-input month-box" placeholder="MM" min="1" max="12" inputmode="numeric">
+      <input type="number" id="year" class="num-input year-box" placeholder="YYYY" min="1900" max="2026" inputmode="numeric">
+    </div>
+    <div class="btn-row">
+      <button class="calc-btn" onclick="checkAge()">Verify Age</button>
+      <button class="clear-btn" onclick="clearForm()">Reset</button>
+    </div>
     <div id="result-box" class="result-box"></div>
   </div>
 
   <div class="footer-note">
-    A.P.D Security Solutions Limited • Offline Ready
+    A.P.D Security Solutions Limited • Fast Door Entry Verification
   </div>
 
   <script>
@@ -173,19 +216,28 @@
     }
 
     function checkAge() {
-      const input = document.getElementById('dob-input').value;
+      const d = parseInt(document.getElementById('day').value);
+      const m = parseInt(document.getElementById('month').value);
+      const y = parseInt(document.getElementById('year').value);
       const resultBox = document.getElementById('result-box');
-      if (!input) {
-        resultBox.style.display = 'none';
+
+      if (!d || !m || !y || d < 1 || d > 31 || m < 1 || m > 12 || y < 1900) {
+        resultBox.style.display = 'block';
+        resultBox.className = 'result-box entry-denied';
+        resultBox.innerText = 'INVALID DOB ENTERED';
         return;
       }
-      const dob = new Date(input);
+
+      const dob = new Date(y, m - 1, d);
       const today = new Date();
+      
       let age = today.getFullYear() - dob.getFullYear();
       const monthDiff = today.getMonth() - dob.getMonth();
+      
       if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
         age--;
       }
+
       resultBox.style.display = 'block';
       if (age >= 18) {
         resultBox.className = 'result-box entry-allowed';
@@ -194,6 +246,14 @@
         resultBox.className = 'result-box entry-denied';
         resultBox.innerText = `AGE: ${age} — UNDER 18 (REFUSE ENTRY)`;
       }
+    }
+
+    function clearForm() {
+      document.getElementById('day').value = '';
+      document.getElementById('month').value = '';
+      document.getElementById('year').value = '';
+      const resultBox = document.getElementById('result-box');
+      resultBox.style.display = 'none';
     }
 
     if ('serviceWorker' in navigator) {
