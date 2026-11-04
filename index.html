@@ -124,7 +124,21 @@
       margin-top: 12px;
       display: none;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
+    }
+    /* Visual Licence Guide Diagram */
+    .licence-guide {
+      background-color: #0d0d0d;
+      border: 1px dashed #e65100;
+      border-radius: 12px;
+      padding: 12px;
+      text-align: left;
+      font-size: 0.8rem;
+      color: #aaa;
+    }
+    .guide-field {
+      color: #ff9800;
+      font-weight: 800;
     }
     .licence-input {
       width: 100%;
@@ -162,6 +176,7 @@
 </head>
 <body>
 
+  <!-- Top Left Logo Image -->
   <img src="1793758190930.jpg" alt="Security Logo" class="top-left-logo" onError="this.style.display='none'">
 
   <div class="logo-container">
@@ -187,8 +202,15 @@
   </div>
 
   <div class="licence-box" id="licence-box">
+    <!-- Visual Guide for UK Driving Licence -->
+    <div class="licence-guide">
+      🪪 <strong>UK Driving Licence Layout:</strong><br>
+      1. Surname<br>
+      2. First names<br>
+      <span class="guide-field">3. Date of Birth (DD.MM.YYYY) 🎯</span>
+    </div>
     <div class="label" style="margin:0;">Enter Birth Year (Field 3):</div>
-    <input type="number" id="birth-year" class="licence-input" placeholder="e.g. 2006" oninput="checkLicenceYear(this.value)">
+    <input type="number" id="birth-year" class="licence-input" placeholder="e.g. 2008" oninput="checkLicenceYear(this.value)">
   </div>
 
   <div id="result-box" class="result-box"></div>
@@ -207,7 +229,9 @@
     function toggleLicenceBox() {
       const box = document.getElementById('licence-box');
       box.style.display = (box.style.display === 'flex') ? 'none' : 'flex';
-      document.getElementById('birth-year').focus();
+      if (box.style.display === 'flex') {
+        document.getElementById('birth-year').focus();
+      }
     }
 
     function checkLicenceYear(val) {
