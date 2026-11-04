@@ -39,6 +39,7 @@
       max-width: 400px;
       box-shadow: 0 8px 32px rgba(0,0,0,0.6);
       text-align: center;
+      margin-bottom: 20px;
     }
     .label {
       font-size: 0.9rem;
@@ -62,6 +63,67 @@
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
+    .scan-btn {
+      width: 100%;
+      max-width: 400px;
+      background-color: #e65100;
+      color: #ffffff;
+      border: none;
+      padding: 16px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      border-radius: 14px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(230, 81, 0, 0.4);
+    }
+    .scan-btn:active {
+      transform: scale(0.98);
+      background-color: #bf360c;
+    }
+    .camera-container {
+      width: 100%;
+      max-width: 400px;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 16px;
+    }
+    video {
+      width: 100%;
+      border-radius: 14px;
+      border: 2px solid #e65100;
+      background-color: #000;
+    }
+    .status-text {
+      font-size: 0.85rem;
+      color: #aaaaaa;
+      margin-top: 10px;
+      text-align: center;
+    }
+    .result-box {
+      margin-top: 16px;
+      padding: 18px;
+      border-radius: 14px;
+      font-size: 1.2rem;
+      font-weight: 900;
+      display: none;
+      text-align: center;
+      width: 100%;
+      max-width: 400px;
+      white-space: pre-line;
+    }
+    .entry-allowed {
+      background-color: #1b3a20;
+      color: #4caf50;
+      border: 2px solid #2e7d32;
+    }
+    .entry-denied {
+      background-color: #3e1a1a;
+      color: #f44336;
+      border: 2px solid #c62828;
+    }
   </style>
 </head>
 <body>
@@ -81,12 +143,44 @@
     <div class="cutoff-sub">To be 18 years of age today</div>
   </div>
 
+  <button class="scan-btn" onclick="startCamera()">📷 Scan Passport MRZ</button>
+
+  <div class="camera-container" id="camera-container">
+    <video id="video" autoplay playsinline></video>
+    <div class="status-text" id="status-text">Point camera at the bottom MRZ lines...</div>
+  </div>
+
+  <div id="result-box" class="result-box"></div>
+
   <script>
     function init() {
       const today = new Date();
       const options = { day: 'numeric', month: 'short', year: 'numeric' };
       const cutoff = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
       document.getElementById('cutoff-date').innerText = cutoff.toLocaleDateString('en-GB', options);
+    }
+
+    let videoStream = null;
+
+    async function startCamera() {
+      const cameraContainer = document.getElementById('camera-container');
+      const resultBox = document.getElementById('result-box');
+      const video = document.getElementById('video');
+      const statusText = document.getElementById('status-text');
+
+      resultBox.style.display = 'none';
+      cameraContainer.style.display = 'flex';
+      statusText.innerText = "Initializing camera...";
+
+      try {
+        videoStream = await navigator.mediaDevices.getUserMedia({ 
+          video: { facingMode: "environment" } 
+        });
+        video.srcObject = videoStream;
+        statusText.innerText = "Camera active. Ready to scan passport.";
+      } catch (err) {
+        statusText.innerText = "Camera access denied or unavailable.";
+      }
     }
 
     init();
