@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>A.P.D Security - Companion App</title>
   <meta name="theme-color" content="#0d0d0d">
-  <!-- Local MRZ Script (No External Network Requests) -->
   <script src="mrz.js"></script>
   <style>
     * {
@@ -115,24 +114,26 @@
     .btn-secondary:active {
       background-color: #333333;
     }
-    .camera-container {
+    .licence-box {
+      background-color: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 16px;
+      padding: 16px;
       width: 100%;
       max-width: 400px;
+      margin-top: 12px;
       display: none;
       flex-direction: column;
-      align-items: center;
-      margin-top: 16px;
+      gap: 10px;
     }
-    video {
+    .licence-input {
       width: 100%;
-      border-radius: 14px;
-      border: 2px solid #e65100;
-      background-color: #000;
-    }
-    .status-text {
-      font-size: 0.85rem;
-      color: #aaaaaa;
-      margin-top: 10px;
+      padding: 12px;
+      background: #0d0d0d;
+      border: 1px solid #444;
+      color: #fff;
+      font-size: 1.1rem;
+      border-radius: 10px;
       text-align: center;
     }
     .result-box {
@@ -161,7 +162,6 @@
 </head>
 <body>
 
-  <!-- Top Left Logo Image -->
   <img src="1793758190930.jpg" alt="Security Logo" class="top-left-logo" onError="this.style.display='none'">
 
   <div class="logo-container">
@@ -181,73 +181,49 @@
 
   <div class="btn-group">
     <button class="btn btn-primary" onclick="startCamera()">📷 Scan Passport</button>
+    <button class="btn btn-secondary" onclick="toggleLicenceBox()">🆔 Check Driving Licence</button>
     <a href="https://app.securitymanager.cloud/observations.php" target="_blank" class="btn btn-secondary">📋 Observations</a>
     <a href="https://app.securitymanager.cloud/add-incident.php" target="_blank" class="btn btn-secondary">⚠️ Add Incident</a>
   </div>
 
-  <div class="camera-container" id="camera-container">
-    <video id="video" autoplay playsinline></video>
-    <div class="status-text" id="status-text">Align passport text inside camera view...</div>
+  <div class="licence-box" id="licence-box">
+    <div class="label" style="margin:0;">Enter Birth Year (Field 3):</div>
+    <input type="number" id="birth-year" class="licence-input" placeholder="e.g. 2006" oninput="checkLicenceYear(this.value)">
   </div>
 
   <div id="result-box" class="result-box"></div>
 
   <script>
+    let cutoffYear = 2008;
+
     function init() {
       const today = new Date();
       const options = { day: 'numeric', month: 'short', year: 'numeric' };
       const cutoff = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+      cutoffYear = cutoff.getFullYear();
       document.getElementById('cutoff-date').innerText = cutoff.toLocaleDateString('en-GB', options);
     }
 
-    let videoStream = null;
-
-    async function startCamera() {
-      const cameraContainer = document.getElementById('camera-container');
-      const resultBox = document.getElementById('result-box');
-      const video = document.getElementById('video');
-      const statusText = document.getElementById('status-text');
-
-      resultBox.style.display = 'none';
-      cameraContainer.style.display = 'flex';
-      statusText.innerText = "Opening camera...";
-
-      try {
-        videoStream = await navigator.mediaDevices.getUserMedia({ 
-          video: { facingMode: "environment" } 
-        });
-        video.srcObject = videoStream;
-        statusText.innerText = "Align MRZ lines at bottom of passport...";
-      } catch (err) {
-        statusText.innerText = "Camera access denied or unavailable.";
-      }
+    function toggleLicenceBox() {
+      const box = document.getElementById('licence-box');
+      box.style.display = (box.style.display === 'flex') ? 'none' : 'flex';
+      document.getElementById('birth-year').focus();
     }
 
-    function verifyAge(dob) {
-      const resultBox = document.getElementById('result-box');
-      const today = new Date();
-      let age = today.getFullYear() - dob.getFullYear();
-      const monthDiff = today.getMonth() - dob.getMonth();
+    function checkLicenceYear(val) {
+      if (val.length === 4) {
+        const year = parseInt(val, 10);
+        const resultBox = document.getElementById('result-box');
+        resultBox.style.display = 'block';
 
-      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
-        age--;
+        if (year <= cutoffYear) {
+          resultBox.className = 'result-box entry-allowed';
+          resultBox.innerText = `BORN: ${year}\n\n✅ ENTRY ALLOWED (18+)`;
+        } else {
+          resultBox.className = 'result-box entry-denied';
+          resultBox.innerText = `BORN: ${year}\n\n🛑 UNDER 18 (REFUSE ENTRY)`;
+        }
       }
-
-      resultBox.style.display = 'block';
-      if (age >= 18) {
-        resultBox.className = 'result-box entry-allowed';
-        resultBox.innerText = `DOB: ${dob.toLocaleDateString('en-GB')}\nAGE: ${age}\n\n✅ ENTRY ALLOWED (18+)`;
-      } else {
-        resultBox.className = 'result-box entry-denied';
-        resultBox.innerText = `DOB: ${dob.toLocaleDateString('en-GB')}\nAGE: ${age}\n\n🛑 UNDER 18 (REFUSE ENTRY)`;
-      }
-    }
-
-    function stopCamera() {
-      if (videoStream) {
-        videoStream.getTracks().forEach(track => track.stop());
-      }
-      document.getElementById('camera-container').style.display = 'none';
     }
 
     init();
