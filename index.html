@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>A.P.D Security - Companion App</title>
   <meta name="theme-color" content="#0d0d0d">
+  <!-- Local MRZ Script (No External Network Requests) -->
+  <script src="mrz.js"></script>
   <style>
     * {
       box-sizing: border-box;
@@ -23,7 +25,6 @@
       padding: 80px 16px 20px 16px;
       position: relative;
     }
-    /* Top Left Logo Image */
     .top-left-logo {
       position: absolute;
       top: 12px;
@@ -114,8 +115,25 @@
     .btn-secondary:active {
       background-color: #333333;
     }
-    #camera-input {
+    .camera-container {
+      width: 100%;
+      max-width: 400px;
       display: none;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 16px;
+    }
+    video {
+      width: 100%;
+      border-radius: 14px;
+      border: 2px solid #e65100;
+      background-color: #000;
+    }
+    .status-text {
+      font-size: 0.85rem;
+      color: #aaaaaa;
+      margin-top: 10px;
+      text-align: center;
     }
     .result-box {
       margin-top: 16px;
@@ -162,40 +180,46 @@
   </div>
 
   <div class="btn-group">
-    <button class="btn btn-primary" onclick="triggerScan()">📷 Scan Passport</button>
-    <input type="file" id="camera-input" accept="image/*" capture="environment" onchange="processImage(this)">
+    <button class="btn btn-primary" onclick="startCamera()">📷 Scan Passport</button>
     <a href="https://app.securitymanager.cloud/observations.php" target="_blank" class="btn btn-secondary">📋 Observations</a>
     <a href="https://app.securitymanager.cloud/add-incident.php" target="_blank" class="btn btn-secondary">⚠️ Add Incident</a>
+  </div>
+
+  <div class="camera-container" id="camera-container">
+    <video id="video" autoplay playsinline></video>
+    <div class="status-text" id="status-text">Align passport text inside camera view...</div>
   </div>
 
   <div id="result-box" class="result-box"></div>
 
   <script>
     function init() {
+      const today = new Date();
+      const options = { day: 'numeric', month: 'short', year: 'numeric' };
+      const cutoff = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+      document.getElementById('cutoff-date').innerText = cutoff.toLocaleDateString('en-GB', options);
+    }
+
+    let videoStream = null;
+
+    async function startCamera() {
+      const cameraContainer = document.getElementById('camera-container');
+      const resultBox = document.getElementById('result-box');
+      const video = document.getElementById('video');
+      const statusText = document.getElementById('status-text');
+
+      resultBox.style.display = 'none';
+      cameraContainer.style.display = 'flex';
+      statusText.innerText = "Opening camera...";
+
       try {
-        const today = new Date();
-        const options = { day: 'numeric', month: 'short', year: 'numeric' };
-        const cutoff = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
-        document.getElementById('cutoff-date').innerText = cutoff.toLocaleDateString('en-GB', options);
+        videoStream = await navigator.mediaDevices.getUserMedia({ 
+          video: { facingMode: "environment" } 
+        });
+        video.srcObject = videoStream;
+        statusText.innerText = "Align MRZ lines at bottom of passport...";
       } catch (err) {
-        console.error("Init Error:", err);
-      }
-    }
-
-    function triggerScan() {
-      document.getElementById('camera-input').click();
-    }
-
-    function processImage(input) {
-      if (input.files && input.files[0]) {
-        const promptDob = prompt("Confirm DOB from passport (DD/MM/YYYY):");
-        if (promptDob) {
-          const parts = promptDob.split('/');
-          if (parts.length === 3) {
-            const dob = new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
-            verifyAge(dob);
-          }
-        }
+        statusText.innerText = "Camera access denied or unavailable.";
       }
     }
 
@@ -217,6 +241,13 @@
         resultBox.className = 'result-box entry-denied';
         resultBox.innerText = `DOB: ${dob.toLocaleDateString('en-GB')}\nAGE: ${age}\n\n🛑 UNDER 18 (REFUSE ENTRY)`;
       }
+    }
+
+    function stopCamera() {
+      if (videoStream) {
+        videoStream.getTracks().forEach(track => track.stop());
+      }
+      document.getElementById('camera-container').style.display = 'none';
     }
 
     init();
