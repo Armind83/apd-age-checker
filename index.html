@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>A.P.D Security - Age Verification</title>
-  <meta name="theme-color" content="#121212">
+  <title>Age Verification</title>
+  <meta name="theme-color" content="#0d0d0d">
   <link rel="manifest" href="manifest.json">
   <style>
     * {
@@ -19,178 +19,57 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       min-height: 100vh;
       padding: 20px 16px;
     }
-    .header {
-      text-align: center;
-      margin-bottom: 20px;
-      width: 100%;
-      max-width: 400px;
-    }
     .logo-container {
-      width: 100px;
-      height: 100px;
-      margin: 0 auto 8px auto;
+      width: 120px;
+      height: 120px;
+      margin-bottom: 24px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
-    .brand-title {
-      font-size: 1.1rem;
-      font-weight: 800;
-      letter-spacing: 1.5px;
-      color: #e65100;
-      text-transform: uppercase;
-    }
-    .brand-sub {
-      font-size: 0.8rem;
-      color: #a0a0a0;
-      letter-spacing: 1px;
-      margin-top: 2px;
-    }
     .card {
       background-color: #1a1a1a;
       border: 1px solid #2a2a2a;
-      border-radius: 16px;
-      padding: 20px;
+      border-radius: 20px;
+      padding: 32px 24px;
       width: 100%;
       max-width: 400px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
       text-align: center;
-      margin-bottom: 16px;
-    }
-    .badge {
-      display: inline-block;
-      background-color: #26160c;
-      color: #ff8c00;
-      font-weight: 700;
-      font-size: 0.75rem;
-      padding: 6px 12px;
-      border-radius: 20px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 12px;
-      border: 1px solid #3d200a;
     }
     .label {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: #b0b0b0;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 1px;
+      font-weight: 600;
     }
     .cutoff-date {
-      font-size: 2rem;
+      font-size: 2.4rem;
       font-weight: 900;
       color: #ffffff;
-      margin-bottom: 4px;
+      margin-bottom: 8px;
       letter-spacing: 0.5px;
     }
     .cutoff-sub {
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       color: #ff9800;
-      font-weight: 600;
-    }
-    .input-row {
-      display: flex;
-      gap: 8px;
-      margin-top: 10px;
-    }
-    .num-input {
-      background-color: #0d0d0d;
-      border: 2px solid #e65100;
-      color: #ffffff;
-      font-size: 1.2rem;
       font-weight: 700;
-      padding: 12px 6px;
-      border-radius: 10px;
-      text-align: center;
-      outline: none;
-    }
-    .day-box, .month-box {
-      flex: 1;
-    }
-    .year-box {
-      flex: 1.5;
-    }
-    .btn-row {
-      display: flex;
-      gap: 8px;
-      margin-top: 12px;
-    }
-    .calc-btn {
-      flex: 1;
-      background-color: #e65100;
-      color: #ffffff;
-      border: none;
-      padding: 12px;
-      font-weight: 800;
-      border-radius: 10px;
-      font-size: 0.95rem;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-    }
-    .clear-btn {
-      background-color: #333333;
-      color: #aaaaaa;
-      border: none;
-      padding: 12px 16px;
-      font-weight: 700;
-      border-radius: 10px;
-      font-size: 0.9rem;
-    }
-    .result-box {
-      margin-top: 14px;
-      padding: 14px;
-      border-radius: 10px;
-      font-size: 1.1rem;
-      font-weight: 800;
-      display: none;
-    }
-    .entry-allowed {
-      background-color: #1b3a20;
-      color: #4caf50;
-      border: 1px solid #2e7d32;
-    }
-    .entry-denied {
-      background-color: #3e1a1a;
-      color: #f44336;
-      border: 1px solid #c62828;
-    }
-    .footer-note {
-      margin-top: auto;
-      padding-top: 16px;
-      font-size: 0.75rem;
-      color: #555555;
-      text-align: center;
     }
   </style>
 </head>
 <body>
 
-  <div class="header">
-    <div class="logo-container">
-      <svg viewBox="0 0 200 200" width="90" height="90" xmlns="http://www.w3.org/2000/svg">
-        <path d="M100 20 L160 50 V100 C160 140 100 175 100 175 C100 175 40 140 40 100 V50 Z" fill="none" stroke="#e65100" stroke-width="8"/>
-        <path d="M100 35 L145 58 V100 C145 130 100 158 100 158 C100 158 55 130 55 100 V58 Z" fill="none" stroke="#777777" stroke-width="4"/>
-        <text x="100" y="95" font-family="sans-serif" font-weight="900" font-size="22" fill="#ffffff" text-anchor="middle">A.P.D</text>
-        <path d="M30 110 Q100 140 170 80" fill="none" stroke="#e65100" stroke-width="5"/>
-      </svg>
-    </div>
-    <div class="brand-title">A.P.D Security Solutions</div>
-    <div class="brand-sub">Limited • Door Supervision Companion</div>
-  </div>
-
-  <div class="card">
-    <div class="badge">Shift Threshold</div>
-    <div class="label">Must be born on or before:</div>
-    <div class="cutoff-date" id="cutoff-date">-- --- ----</div>
-    <div class="cutoff-sub">To be 18 years of age today</div>
-  </div>
-
-  <div class="card">
-    <div class="label">Quick Check Passport DOB:</div>
-    <div class="input-row">
-      <input type="number" id="day" class="num-input day-box" placeholder="DD" min="1" max="31" inputmode="numeric">
-      <input type="number" id="month" class="num-input
+  <div class="logo-container">
+    <svg viewBox="0 0 200 200" width="110" height="110" xmlns="http://www.w3.org/2000/svg">
+      <path d="M100 20 L160 50 V100 C160 140 100 175 100 175 C100 175 40 140 40 100 V50 Z" fill="none" stroke="#e65100" stroke-width="8"/>
+      <path d="M100 35 L145 58 V100 C145 130 100 158 100 158 C100 158 55 130 55 100 V58 Z" fill="none" stroke="#777777" stroke-width="4"/>
+      <text x="100" y="95" font-family="sans-serif" font-weight="900" font-size="22" fill="#ffffff" text-anchor="middle">A.P.D</text>
+      <path d="M30 110
