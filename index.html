@@ -3,10 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>A.P.D Security - Passport Scanner</title>
+  <title>A.P.D Security - Age Verification</title>
   <meta name="theme-color" content="#0d0d0d">
-  <!-- Load Client-Side OCR Library for Passport MRZ Reading -->
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <style>
     * {
       box-sizing: border-box;
@@ -20,13 +18,14 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       min-height: 100vh;
       padding: 20px 16px;
     }
     .logo-container {
       width: 120px;
       height: 120px;
-      margin-bottom: 20px;
+      margin-bottom: 24px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -35,10 +34,62 @@
       background-color: #1a1a1a;
       border: 1px solid #2a2a2a;
       border-radius: 20px;
-      padding: 28px 20px;
+      padding: 32px 24px;
       width: 100%;
       max-width: 400px;
       box-shadow: 0 8px 32px rgba(0,0,0,0.6);
       text-align: center;
-      margin-bottom: 16px;
     }
+    .label {
+      font-size: 0.9rem;
+      color: #b0b0b0;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+    .cutoff-date {
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: #ffffff;
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+    }
+    .cutoff-sub {
+      font-size: 0.85rem;
+      color: #ff9800;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="logo-container">
+    <svg viewBox="0 0 200 200" width="110" height="110" xmlns="http://www.w3.org/2000/svg">
+      <path d="M100 20 L160 50 V100 C160 140 100 175 100 175 C100 175 40 140 40 100 V50 Z" fill="none" stroke="#e65100" stroke-width="8"/>
+      <path d="M100 35 L145 58 V100 C145 130 100 158 100 158 C100 158 55 130 55 100 V58 Z" fill="none" stroke="#777777" stroke-width="4"/>
+      <text x="100" y="95" font-family="sans-serif" font-weight="900" font-size="22" fill="#ffffff" text-anchor="middle">A.P.D</text>
+      <path d="M30 110 Q100 140 170 80" fill="none" stroke="#e65100" stroke-width="5"/>
+    </svg>
+  </div>
+
+  <div class="card">
+    <div class="label">Must be born on or before:</div>
+    <div class="cutoff-date" id="cutoff-date">-- --- ----</div>
+    <div class="cutoff-sub">To be 18 years of age today</div>
+  </div>
+
+  <script>
+    function init() {
+      const today = new Date();
+      const options = { day: 'numeric', month: 'short', year: 'numeric' };
+      const cutoff = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+      document.getElementById('cutoff-date').innerText = cutoff.toLocaleDateString('en-GB', options);
+    }
+
+    init();
+  </script>
+</body>
+</html>
