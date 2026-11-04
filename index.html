@@ -25,7 +25,7 @@
     }
     .logo-container {
       width: 100%;
-      max-width: 280px;
+      max-width: 340px;
       margin-bottom: 20px;
       display: flex;
       align-items: center;
@@ -33,11 +33,13 @@
     }
     .main-logo-img {
       width: 100%;
+      max-width: 340px;
       height: auto;
       border-radius: 16px;
       border: 3px solid #e65100;
       box-shadow: 0 6px 24px rgba(230, 81, 0, 0.5);
       object-fit: cover;
+      display: block;
     }
     .card {
       background-color: #1a1a1a;
@@ -174,7 +176,7 @@
 
   <!-- Central A.P.D Van Graphic -->
   <div class="logo-container">
-    <img src="1000022318.jpg" alt="A.P.D Security" class="main-logo-img" onError="this.src='van.jpg'">
+    <img src="1793785976587.jpg" alt="A.P.D Security" class="main-logo-img">
   </div>
 
   <div class="card">
@@ -216,7 +218,7 @@
   <div id="result-box" class="result-box"></div>
 
   <script>
-    // Unregister service workers to force instant cache clear
+    // Force unregister service workers to clear mobile cache
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.getRegistrations().then(function(registrations) {
         for (var i = 0; i < registrations.length; i++) {
